@@ -77,4 +77,29 @@ contract Newsfeed {
         Post storage post = posts[_postId];
         return (post.author, post.content, post.upvoteCount, post.downvoteCount, post.etherAmount, post.sourcePostIds);
     }
+
+    
+    function getAllPosts() public view returns (uint256[] memory, address[] memory, string[] memory, int256[] memory, int256[] memory, uint256[] memory, uint256[][] memory) {
+        uint256[] memory postIds = new uint256[](postCount);
+        address[] memory authors = new address[](postCount);
+        string[] memory contents = new string[](postCount);
+        int256[] memory upvoteCounts = new int256[](postCount);
+        int256[] memory downvoteCounts = new int256[](postCount);
+        uint256[] memory etherAmounts = new uint256[](postCount);
+        uint256[][] memory sourcePostIds = new uint256[][](postCount);
+
+        for (uint256 i = 1; i <= postCount; i++) {
+            Post storage post = posts[i];
+            postIds[i - 1] = i;
+            authors[i - 1] = post.author;
+            contents[i - 1] = post.content;
+            upvoteCounts[i - 1] = post.upvoteCount;
+            downvoteCounts[i - 1] = post.downvoteCount;
+            etherAmounts[i - 1] = post.etherAmount;
+            sourcePostIds[i - 1] = post.sourcePostIds;
+        }
+
+        return (postIds, authors, contents, upvoteCounts, downvoteCounts, etherAmounts, sourcePostIds);
+    }
+
 }
