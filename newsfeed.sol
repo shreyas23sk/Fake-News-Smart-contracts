@@ -7,7 +7,7 @@ contract Newsfeed {
         string content;
         int256 upvoteCount;
         int256 downvoteCount;
-        uint256[] sourcePostIds;
+        string[] sourcePostIds;
         mapping(address => bool) hasVoted;
         uint256 etherAmount;
     }
@@ -18,7 +18,7 @@ contract Newsfeed {
     event PostCreated(uint256 postId, address author, string content, int256 voteCount, uint256 etherAmount);
     event Voted(uint256 postId, address voter, int256 newUpvoteCount, int256 downvoteCount, uint256 etherReturned);
 
-    function createPost(string memory _content, uint256[] memory _sourcePostIds) public payable {
+    function createPost(string memory _content, string[] memory _sourcePostIds) public payable {
         require(msg.value >= 500000, "Insufficient Ether sent");
 
         postCount++;
@@ -72,21 +72,21 @@ contract Newsfeed {
         return (post.upvoteCount * 100) / totalVotes;
     }
 
-    function getPost(uint256 _postId) public view returns (address, string memory, int256,int256, uint256, uint256[] memory) {
+    function getPost(uint256 _postId) public view returns (address, string memory, int256,int256, uint256, string[] memory) {
         require(_postId > 0 && _postId <= postCount, "Invalid post ID");
         Post storage post = posts[_postId];
         return (post.author, post.content, post.upvoteCount, post.downvoteCount, post.etherAmount, post.sourcePostIds);
     }
 
     
-    function getAllPosts() public view returns (uint256[] memory, address[] memory, string[] memory, int256[] memory, int256[] memory, uint256[] memory, uint256[][] memory) {
+    function getAllPosts() public view returns (uint256[] memory, address[] memory, string[] memory, int256[] memory, int256[] memory, uint256[] memory, string[][] memory) {
         uint256[] memory postIds = new uint256[](postCount);
         address[] memory authors = new address[](postCount);
         string[] memory contents = new string[](postCount);
         int256[] memory upvoteCounts = new int256[](postCount);
         int256[] memory downvoteCounts = new int256[](postCount);
         uint256[] memory etherAmounts = new uint256[](postCount);
-        uint256[][] memory sourcePostIds = new uint256[][](postCount);
+        string[][] memory sourcePostIds = new string[][](postCount);
 
         for (uint256 i = 1; i <= postCount; i++) {
             Post storage post = posts[i];
